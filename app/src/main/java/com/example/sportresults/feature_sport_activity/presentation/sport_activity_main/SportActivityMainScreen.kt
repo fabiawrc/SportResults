@@ -8,14 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.sportresults.core.presentation.ui.theme.SpaceSmall
 import com.example.sportresults.R
 import com.example.sportresults.core.presentation.ui.theme.MainButtonHeight
 import com.example.sportresults.core.presentation.ui.theme.SpaceLarge
 import com.example.sportresults.core.presentation.ui.theme.SpaceMedium
+import com.example.sportresults.core.util.Screen
 
 @Composable
 fun SportActivityMainScreen(
@@ -31,8 +30,6 @@ fun SportActivityMainScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -47,9 +44,11 @@ fun SportActivityMainScreen(
 
             Row(modifier = Modifier.fillMaxWidth()) {
                 Button(
-                    onClick = { }, modifier = Modifier
+                    onClick = {
+                              onNavigate(Screen.SportActivityDetailScreen.route)
+                    }, modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = SpaceMedium)
+                        .height(MainButtonHeight)
                 ) {
                     Text(
                         text = stringResource(id = R.string.new_activity),

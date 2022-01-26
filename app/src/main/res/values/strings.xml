@@ -6,4 +6,11 @@
     <string name="new_activity">Nová aktivita</string>
     <string name="error_unknown">Nastala neznámá chyba</string>
     <string name="sportype_unknown">Neznámý</string>
+    <string name="back">Zpět</string>
+    <string name="new_sport_activity">Nová aktivita</string>
+    <string name="save">Uložit</string>
+    <string name="sporttype_select">Vyberte sport</string>
+    <string name="storagetype_select">Vyberte typ úložiště</string>
+    <string name="sport">Sport</string>
+    <string name="storage">Úložiště</string>
 </resources>

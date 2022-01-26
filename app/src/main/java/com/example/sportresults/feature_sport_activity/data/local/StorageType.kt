@@ -1,5 +1,7 @@
 package com.example.sportresults.feature_sport_activity.data.local
 
+import com.example.sportresults.core.domain.model.DropDownContentData
+
 sealed class StorageType(val type: Int, val name:String, val color: String) {
     object All : StorageType(0, "All", "")
     object Local : StorageType(1, "Local", "")
@@ -22,6 +24,13 @@ sealed class StorageType(val type: Int, val name:String, val color: String) {
                 .firstOrNull { it -> it.objectInstance?.type == type }
                 ?.objectInstance
                 ?: All
+        }
+
+        fun toDropDownContentData(storageType: StorageType): DropDownContentData {
+            return DropDownContentData(
+                text = storageType.name,
+                value = storageType.type
+            )
         }
     }
 }
