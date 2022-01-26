@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">SportResults</string>
+    <string name="running">Běh</string>
+    <string name="unknown_error">Nastala neznámá chyba</string>
+    <string name="activity_list">Přehled aktivit</string>
+    <string name="new_activity">Nová aktivita</string>
+    <string name="error_unknown">Nastala neznámá chyba</string>
+    <string name="sportype_unknown">Neznámý</string>
+</resources>
