@@ -2,6 +2,7 @@ package com.example.sportresults.feature_sport_activity.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.sportresults.core.util.TimeCalc
 import com.example.sportresults.feature_sport_activity.data.local.SportType
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.model.SportActivity
@@ -10,17 +11,17 @@ import java.util.*
 
 @Entity
 data class SportActivityEntity(
-    @PrimaryKey val activityId: Long,
+    @PrimaryKey(autoGenerate = true) val activityId: Long = 0,
     val timestamp: Long,
     val sportType: Int,
     val storageType: Int,
     val place: String,
-    val hours: Int = 0,
-    val minutes: Int = 0,
-    val seconds: Int = 0
+    val duration: Int = 0
 )
 {
     fun toActivity():SportActivity{
+        val userDurationTime = TimeCalc.getUserDurationTime(duration)
+
         return SportActivity(
             activityId = activityId,
             sportType = when(sportType) {
@@ -35,8 +36,9 @@ data class SportActivityEntity(
                 else -> StorageType.All
             },
             place = place,
-            hours = hours,
-            minutes = minutes,
+            hours = userDurationTime.hours,
+            minutes = userDurationTime.minutes,
+            seconds = userDurationTime.seconds,
             formattedTime = SimpleDateFormat(
                 "MMM dd, HH:mm", Locale.getDefault()
             ).run {

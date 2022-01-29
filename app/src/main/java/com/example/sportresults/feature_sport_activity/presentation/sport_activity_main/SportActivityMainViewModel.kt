@@ -5,26 +5,34 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sportresults.core.util.Resource
+import com.example.sportresults.core.util.UiEvent
+import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.use_case.SportActivityUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class SportActivityViewModel @Inject constructor(
+class SportActivityMainViewModel @Inject constructor(
     private val sportActivityUseCases: SportActivityUseCases
 ) : ViewModel() {
 
     private val _state = mutableStateOf(SportActivityMainState())
-    val stateSport: State<SportActivityMainState> = _state
+    val state: State<SportActivityMainState> = _state
+
+    private val _uiEvent = Channel<UiEvent> { }
+    val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
+        loadStorageTypes()
         loadActivities()
     }
 
-    fun onEvent(eventSport: SportActivityMainEvent) {
-        when (eventSport) {
+    fun onEvent(event: SportActivityMainEvent) {
+        when (event) {
             is SportActivityMainEvent.ClickNewSportActivity -> {
 
             }
@@ -32,32 +40,52 @@ class SportActivityViewModel @Inject constructor(
 
             }
             is SportActivityMainEvent.StorageTypeChange -> {
-
+                _state.value = state.value.copy(
+                    selectedStorageType = event.sorageType
+                )
+                loadActivities()
             }
         }
     }
 
     private fun loadActivities() {
         viewModelScope.launch {
-            _state.value = stateSport.value.copy(
+            _state.value = state.value.copy(
                 isLoading = true
             )
-            val response = sportActivityUseCases.getActivitiesUseCase()
+            val response = sportActivityUseCases.getActivitiesUseCase(state.value.selectedStorageType)
 
             when (response) {
                 is Resource.Success -> {
-                    _state.value = stateSport.value.copy(
+                    _state.value = state.value.copy(
                         sportActivities = response.data ?: emptyList(),
                         isLoading = false
                     )
                 }
                 is Resource.Error -> {
                     Timber.d(response.message)
-                    _state.value = stateSport.value.copy(
-                        isLoading = false
+                    _state.value = state.value.copy(
+                        isLoading = false,
+                        sportActivities = response.data ?: emptyList()
                     )
+
+                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
                 }
             }
+        }
+    }
+
+    private fun loadStorageTypes() {
+        viewModelScope.launch {
+            _state.value = state.value.copy(
+                storageTypes = StorageType.getList()
+            )
+        }
+    }
+
+    private fun sendUiEvent(event: UiEvent) {
+        viewModelScope.launch {
+            _uiEvent.send(event)
         }
     }
 }

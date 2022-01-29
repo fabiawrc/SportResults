@@ -17,14 +17,13 @@ fun Navigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.SportActivityMainScreen.route,
+        startDestination = Screen.SplashScreen.route,
         modifier = Modifier.fillMaxSize()
     ) {
         composable(Screen.SplashScreen.route) {
             SplashScreen(
                 onPopBackStack = navController::popBackStack,
                 onNavigate = navController::navigate,
-                navController = navController
             )
         }
         composable(Screen.SportActivityMainScreen.route){

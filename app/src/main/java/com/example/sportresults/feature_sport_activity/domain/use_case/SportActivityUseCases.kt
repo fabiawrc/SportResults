@@ -7,5 +7,5 @@ data class SportActivityUseCases(
     val getSportTypesUseCase: GetSportTypesUseCase,
     val getSportTypeUseCase: GetSportTypeUseCase,
     val getStorageTypesUseCase: GetStorageTypesUseCase,
-    val getStorageTypeUseCase: GetStorageTypeUseCase
+    val getStorageTypeUseCase: GetStorageTypeUseCase,
 )

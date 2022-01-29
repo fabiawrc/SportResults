@@ -23,9 +23,6 @@ class SportActivityRepositoryImpl @Inject constructor(
                 is StorageType.Remote -> {
                     responseData = apiSport.getActivity(activityId.toString()).data?.toActivity()
                 }
-                is StorageType.All -> {
-
-                }
             }
             Resource.Success(data = responseData)
         } catch (e: Exception) {
@@ -36,33 +33,37 @@ class SportActivityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAllActivities(storageType: StorageType): Resource<List<SportActivity>> {
+        var responseData: MutableList<SportActivity>? = mutableListOf()
+
         return try {
-            var responseData: List<SportActivity>? = emptyList()
             when (storageType) {
                 is StorageType.Local -> {
-                    responseData = daoSport.getAllActivities().map { it.toActivity() }
+                    responseData = daoSport.getAllActivities().map { it.toActivity() }.toMutableList()
                 }
                 is StorageType.Remote -> {
-                    responseData = apiSport.getAllActivities().data?.map { it.toActivity() }
+                    responseData = apiSport.getAllActivities().data?.map { it.toActivity() }?.toMutableList()
                 }
                 is StorageType.All -> {
-
+                    val localData = daoSport.getAllActivities().map { it.toActivity() }
+                    responseData?.addAll(localData)
+                    val remoteData = apiSport.getAllActivities().data?.map { it.toActivity() }
+                    responseData?.addAll(remoteData ?: emptyList())
                 }
             }
             Resource.Success(data = responseData)
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                message = e.localizedMessage,
+                data = responseData
             )
         }
     }
 
     override suspend fun insertActivity(
-        sportActivity: SportActivity,
-        storageType: StorageType
+        sportActivity: SportActivity
     ): Resource<Unit> {
         return try {
-            when (storageType) {
+            when (sportActivity.storageType) {
                 is StorageType.Local -> {
                     daoSport.insertActivity(sportActivity.toActivityEntity())
                 }
@@ -70,7 +71,9 @@ class SportActivityRepositoryImpl @Inject constructor(
                     apiSport.insertActivity(sportActivity.toActivityDto())
                 }
                 is StorageType.All -> {
+                    sportActivity.storageType = StorageType.Local
                     daoSport.insertActivity(sportActivity.toActivityEntity())
+                    sportActivity.storageType = StorageType.Remote
                     apiSport.insertActivity(sportActivity.toActivityDto())
                 }
             }

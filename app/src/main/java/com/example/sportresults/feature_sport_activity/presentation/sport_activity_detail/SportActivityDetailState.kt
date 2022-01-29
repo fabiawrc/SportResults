@@ -6,7 +6,9 @@ import com.example.sportresults.feature_sport_activity.domain.model.SportActivit
 
 data class SportActivityDetailState(
     val isLoading: Boolean = false,
-    val sportActivity: SportActivity? = null,
-    val sportTypes:List<SportType> = emptyList(),
+    val sportActivity: SportActivity? = SportActivity(),
+    val sportTypes: List<SportType> = emptyList(),
     val storageTypes: List<StorageType> = emptyList(),
+    val showDurationDialog: Boolean = false,
+    val canSave: Boolean = false
 )

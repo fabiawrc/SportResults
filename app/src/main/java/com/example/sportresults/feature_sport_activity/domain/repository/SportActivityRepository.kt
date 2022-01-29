@@ -9,5 +9,5 @@ interface SportActivityRepository {
 
     suspend fun getAllActivities(storageType: StorageType = StorageType.All): Resource<List<SportActivity>>
 
-    suspend fun insertActivity(sportActivity: SportActivity, storageType: StorageType = StorageType.All): Resource<Unit>
+    suspend fun insertActivity(sportActivity: SportActivity): Resource<Unit>
 }

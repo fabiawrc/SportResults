@@ -13,4 +13,7 @@
     <string name="storagetype_select">Vyberte typ úložiště</string>
     <string name="sport">Sport</string>
     <string name="storage">Úložiště</string>
+    <string name="duration">Trvání</string>
+    <string name="ok">OK</string>
+    <string name="emptylist">Nic tady ještě není...</string>
 </resources>

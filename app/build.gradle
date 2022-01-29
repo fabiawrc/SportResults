@@ -99,4 +99,13 @@ dependencies {
 
     // Timber
     implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    //Number picker
+    implementation "com.chargemap.compose:numberpicker:0.0.11"
+
+    //Lottie animations
+    implementation "com.airbnb.android:lottie:4.2.2"
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.airbnb.android:lottie-compose:4.2.2"
 }

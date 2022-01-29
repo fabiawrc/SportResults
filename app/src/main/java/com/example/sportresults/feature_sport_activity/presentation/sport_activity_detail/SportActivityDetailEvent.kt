@@ -4,6 +4,9 @@ sealed class SportActivityDetailEvent {
     object ClickSave : SportActivityDetailEvent()
     data class SetSportType(val type: Int) : SportActivityDetailEvent()
     data class SetPlace(val name: String) : SportActivityDetailEvent()
-    data class SetDuration(val duration: Int) : SportActivityDetailEvent()
+    data class SetHours(val value: Int) : SportActivityDetailEvent()
+    data class SetMinutes(val value: Int) : SportActivityDetailEvent()
+    data class SetSeconds(val value: Int) : SportActivityDetailEvent()
     data class SetStorageType(val type: Int) : SportActivityDetailEvent()
+    object SetShowDurationDialog: SportActivityDetailEvent()
 }

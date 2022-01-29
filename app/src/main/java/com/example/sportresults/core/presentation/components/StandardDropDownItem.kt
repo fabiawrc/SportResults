@@ -6,9 +6,11 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.sportresults.core.domain.model.DropDownContentData
+import com.example.sportresults.core.presentation.ui.theme.IconSizeSmall
 import com.example.sportresults.core.presentation.ui.theme.SpaceMedium
 import com.example.sportresults.core.presentation.ui.theme.SpaceSmall
 
@@ -17,7 +19,8 @@ fun StandardDropDownItem(
     dropDownContentData: DropDownContentData
 ) {
     Row(
-        modifier = Modifier.padding(horizontal = SpaceMedium, vertical = SpaceSmall)
+        modifier = Modifier.padding(horizontal = SpaceMedium, vertical = SpaceSmall),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         dropDownContentData.icon?.let { icon ->
             Icon(
