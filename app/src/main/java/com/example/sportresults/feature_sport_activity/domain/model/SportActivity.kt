@@ -17,6 +17,7 @@ data class SportActivity(
     val hours: Int = 0,
     val minutes: Int = 0,
     val seconds: Int = 0,
+    val distance: Float = 0f
 ) {
     fun toActivityEntity(): SportActivityEntity {
         val duration = TimeCalc.getDuration(UserDurationTime(hours, minutes, seconds))
@@ -27,7 +28,8 @@ data class SportActivity(
             sportType = sportType!!.type,
             storageType = storageType!!.type,
             place = place,
-            duration = duration
+            duration = duration,
+            distance = distance
         )
     }
 
@@ -40,7 +42,8 @@ data class SportActivity(
             sportType = sportType!!.type,
             storageType = storageType!!.type,
             place = place,
-            duration = duration
+            duration = duration,
+            distance = distance
         )
     }
 

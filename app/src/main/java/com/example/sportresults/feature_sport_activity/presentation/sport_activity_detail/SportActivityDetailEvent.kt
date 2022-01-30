@@ -7,6 +7,8 @@ sealed class SportActivityDetailEvent {
     data class SetHours(val value: Int) : SportActivityDetailEvent()
     data class SetMinutes(val value: Int) : SportActivityDetailEvent()
     data class SetSeconds(val value: Int) : SportActivityDetailEvent()
+    data class SetDistanceString(val value: String) : SportActivityDetailEvent()
+    data class SetDistance(val value: String) : SportActivityDetailEvent()
     data class SetStorageType(val type: Int) : SportActivityDetailEvent()
     object SetShowDurationDialog: SportActivityDetailEvent()
 }

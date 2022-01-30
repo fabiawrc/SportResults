@@ -53,7 +53,8 @@ class SportActivityMainViewModel @Inject constructor(
             _state.value = state.value.copy(
                 isLoading = true
             )
-            val response = sportActivityUseCases.getActivitiesUseCase(state.value.selectedStorageType)
+            val response =
+                sportActivityUseCases.getActivitiesUseCase(state.value.selectedStorageType)
 
             when (response) {
                 is Resource.Success -> {
@@ -77,9 +78,22 @@ class SportActivityMainViewModel @Inject constructor(
 
     private fun loadStorageTypes() {
         viewModelScope.launch {
-            _state.value = state.value.copy(
-                storageTypes = StorageType.getList()
-            )
+            val response = sportActivityUseCases.getStorageTypesUseCase(null)
+
+            when (response) {
+                is Resource.Success -> {
+                    _state.value = state.value.copy(
+                        storageTypes = response.data ?: emptyList()
+                    )
+                }
+
+                is Resource.Error -> {
+                    _state.value = state.value.copy(
+                        storageTypes = response.data ?: emptyList()
+                    )
+                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                }
+            }
         }
     }
 

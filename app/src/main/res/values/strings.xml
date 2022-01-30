@@ -16,4 +16,7 @@
     <string name="duration">Trvání</string>
     <string name="ok">OK</string>
     <string name="emptylist">Nic tady ještě není...</string>
+    <string name="place">Místo</string>
+    <string name="place_select">Zadejte místo sportu</string>
+    <string name="distance">Vzdálenost</string>
 </resources>

@@ -12,3 +12,5 @@ val IconSizeMedium = 25.dp
 val IconSizeLarge = 35.dp
 
 val MainButtonHeight = 50.dp
+
+val SnackBarBottomPadding = 60.dp

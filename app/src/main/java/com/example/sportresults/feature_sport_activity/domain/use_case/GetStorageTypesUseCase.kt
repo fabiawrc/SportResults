@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetStorageTypesUseCase @Inject constructor(
     private val repository: StorageTypeRepository
 ) {
-    suspend operator fun invoke(): Resource<List<StorageType>>{
-        return repository.getAll()
+    suspend operator fun invoke(forDbOperation: Boolean?): Resource<List<StorageType>>{
+        return repository.getAll(forDbOperation)
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.sportresults.R
@@ -69,8 +70,8 @@ fun SportActivityMainScreen(
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     mainAxisAlignment = MainAxisAlignment.Center,
-                    mainAxisSpacing = SpaceMedium,
-                    crossAxisSpacing = SpaceMedium
+                    mainAxisSpacing = SpaceSmall,
+                    crossAxisSpacing = SpaceSmall
                 ) {
                     state.storageTypes.forEach { item ->
                         Chip(
@@ -126,7 +127,9 @@ fun SportActivityMainScreen(
         }
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .padding(bottom = SnackBarBottomPadding)
+                .align(Alignment.BottomCenter)
         )
     }
 }

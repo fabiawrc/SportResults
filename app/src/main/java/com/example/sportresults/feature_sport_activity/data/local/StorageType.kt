@@ -7,10 +7,10 @@ import com.example.sportresults.core.presentation.ui.theme.BlueAccent
 import com.example.sportresults.core.presentation.ui.theme.GreenSuccess
 import com.example.sportresults.core.presentation.ui.theme.RedDanger
 
-sealed class StorageType(val type: Int, val name:String, val color: Color, val icon: Int) {
-    object All : StorageType(0, "Vše", BlueAccent, R.drawable.check_all)
-    object Local : StorageType(1, "Lokální", GreenSuccess, R.drawable.database)
-    object Remote : StorageType(2, "Vzdálené", RedDanger, R.drawable.server_network)
+sealed class StorageType(val type: Int, val name:String, val color: Color, val icon: Int, val forDbOperation: Boolean) {
+    object All : StorageType(0, "Vše", BlueAccent, R.drawable.check_all, false)
+    object Local : StorageType(1, "Lokální", GreenSuccess, R.drawable.database, true)
+    object Remote : StorageType(2, "Vzdálené", RedDanger, R.drawable.server_network, true)
 
     companion object {
         fun getList(): List<StorageType> {

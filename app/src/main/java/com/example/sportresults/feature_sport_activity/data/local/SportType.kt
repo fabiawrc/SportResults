@@ -3,10 +3,10 @@ package com.example.sportresults.feature_sport_activity.data.local
 import com.example.sportresults.R
 import com.example.sportresults.core.domain.model.DropDownContentData
 
-sealed class SportType(val type: Int, val name: String, val icon: Int) {
-    object Unknown : SportType(0, "Neznámý", R.drawable.ic_baseline_question_mark_24)
-    object Running : SportType(1, "Běh", R.drawable.ic_baseline_directions_run_24)
-    object Bike : SportType(2, "Cyklistika", R.drawable.ic_baseline_directions_bike_24)
+sealed class SportType(val type: Int, val name: String, val hasDistance: Boolean, val icon: Int) {
+    object Running : SportType(0, "Běh", true, R.drawable.ic_baseline_directions_run_24)
+    object Bike : SportType(1, "Cyklistika", true, R.drawable.ic_baseline_directions_bike_24)
+    object Tenis : SportType(2, "Tenis", false, R.drawable.tennis)
 
     companion object {
         fun getList(): List<SportType> {
@@ -24,7 +24,7 @@ sealed class SportType(val type: Int, val name: String, val icon: Int) {
             return SportType::class.sealedSubclasses
                 .firstOrNull { it -> it.objectInstance?.type == type }
                 ?.objectInstance
-                ?: Unknown
+                ?: Running
         }
 
         fun toDropDownContentData(sportType: SportType):DropDownContentData{

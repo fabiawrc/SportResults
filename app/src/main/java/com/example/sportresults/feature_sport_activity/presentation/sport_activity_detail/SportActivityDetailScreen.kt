@@ -1,8 +1,12 @@
 package com.example.sportresults.feature_sport_activity.presentation.sport_activity_detail
 
 import android.widget.TimePicker
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Save
@@ -12,18 +16,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.widget.Placeholder
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chargemap.compose.numberpicker.NumberPicker
 import com.example.sportresults.R
-import com.example.sportresults.core.presentation.components.StandardAlertDialog
-import com.example.sportresults.core.presentation.components.StandardDropDown
-import com.example.sportresults.core.presentation.components.StandardTimePicker
-import com.example.sportresults.core.presentation.components.StandardToolbar
+import com.example.sportresults.core.presentation.components.*
 import com.example.sportresults.core.presentation.ui.theme.*
 import com.example.sportresults.core.util.UiEvent
 import com.example.sportresults.feature_sport_activity.data.local.SportType
@@ -87,10 +93,13 @@ fun SportActivityDetailScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1f)
                     .padding(SpaceLarge)
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .weight(1f)
+                ) {
                     StandardDropDown(
                         label = stringResource(id = R.string.sport),
                         text = stringResource(id = R.string.sporttype_select),
@@ -127,26 +136,35 @@ fun SportActivityDetailScreen(
                         ) {
                             Text(
                                 text = state.sportActivity?.hours.toString(),
-                                style = MaterialTheme.typography.h3
+                                color = if (state.sportActivity!!.hours <= 0) Silver else MaterialTheme.colors.onBackground
                             )
                             Spacer(modifier = Modifier.width(SpaceLittle))
-                            Text(text = "h", color = MaterialTheme.colors.primary)
+                            Text(
+                                text = "h",
+                                color = if (state.sportActivity!!.hours <= 0) Silver else MaterialTheme.colors.primary
+                            )
                             Spacer(modifier = Modifier.width(SpaceLittle))
 
                             Text(
                                 text = state.sportActivity?.minutes.toString(),
-                                style = MaterialTheme.typography.h3
+                                color = if (state.sportActivity!!.minutes <= 0) Silver else MaterialTheme.colors.onBackground
                             )
                             Spacer(modifier = Modifier.width(SpaceLittle))
-                            Text(text = "min", color = MaterialTheme.colors.primary)
+                            Text(
+                                text = "min",
+                                color = if (state.sportActivity!!.minutes <= 0) Silver else MaterialTheme.colors.primary
+                            )
                             Spacer(modifier = Modifier.width(SpaceLittle))
 
                             Text(
                                 text = state.sportActivity?.seconds.toString(),
-                                style = MaterialTheme.typography.h3
+                                color = if (state.sportActivity!!.seconds <= 0) Silver else MaterialTheme.colors.onBackground
                             )
                             Spacer(modifier = Modifier.width(SpaceLittle))
-                            Text(text = "s", color = MaterialTheme.colors.primary)
+                            Text(
+                                text = "s",
+                                color = if (state.sportActivity!!.seconds <= 0) Silver else MaterialTheme.colors.primary
+                            )
                         }
                         Spacer(modifier = Modifier.height(SpaceLittle))
                         Divider(
@@ -156,6 +174,38 @@ fun SportActivityDetailScreen(
                     }
 
                     Spacer(modifier = Modifier.height(SpaceLarge))
+
+                    state.sportActivity?.sportType?.hasDistance?.let {
+                        if (it) {
+                            StandardTextField(
+                                text = viewModel.distanceState.value,
+                                label = stringResource(id = R.string.distance),
+                                postfix = "km",
+                                placeholder = "0.00",
+                                keyboardType = KeyboardType.Number,
+                                maxLength = 4,
+                                onValueChanged = {
+                                    viewModel.onEvent(SportActivityDetailEvent.SetDistanceString(it))
+                                },
+                                onDone = {
+                                    viewModel.onEvent(SportActivityDetailEvent.SetDistance(it))
+                                }
+                            )
+
+                            Spacer(modifier = Modifier.height(SpaceLarge))
+                        }
+                    }
+
+                    StandardTextField(
+                        text = state.sportActivity?.place ?: "",
+                        label = stringResource(id = R.string.place),
+                        placeholder = stringResource(id = R.string.place_select),
+                        onValueChanged = {
+                            viewModel.onEvent(SportActivityDetailEvent.SetPlace(it))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(SpaceLarge))
+
                     StandardDropDown(
                         label = stringResource(id = R.string.storage),
                         text = stringResource(id = R.string.storagetype_select),
@@ -165,13 +215,17 @@ fun SportActivityDetailScreen(
                         }
                     )
                 }
-                Spacer(modifier = Modifier
-                    .height(SpaceLarge)
-                    .weight(1f))
+                Spacer(
+                    modifier = Modifier
+                        .height(SpaceLarge)
+                        .weight(1f)
+                )
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Button(
-                        onClick = { }, modifier = Modifier
+                        onClick = {
+                            viewModel.onEvent(SportActivityDetailEvent.ClickSave)
+                        }, modifier = Modifier
                             .fillMaxWidth()
                             .height(MainButtonHeight),
                         enabled = state.canSave
@@ -223,7 +277,9 @@ fun SportActivityDetailScreen(
 
         SnackbarHost(
             hostState = snackbarHostState,
-            modifier = Modifier.align(Alignment.BottomCenter)
+            modifier = Modifier
+                .padding(bottom = SnackBarBottomPadding)
+                .align(Alignment.BottomCenter)
         )
     }
 }

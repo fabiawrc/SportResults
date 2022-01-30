@@ -14,6 +14,7 @@ data class SportActivityDto(
     val storageType: Int,
     val place: String,
     val duration: Int = 0,
+    val distance: Float = 0f
 ) {
     fun toActivity(): SportActivity {
         val userDurationTime = TimeCalc.getUserDurationTime(duration)
@@ -35,6 +36,7 @@ data class SportActivityDto(
             hours = userDurationTime.hours,
             minutes = userDurationTime.minutes,
             seconds = userDurationTime.seconds,
+            distance = distance,
             formattedTime = SimpleDateFormat(
                 "MMM dd, HH:mm", Locale.getDefault()
             ).run {

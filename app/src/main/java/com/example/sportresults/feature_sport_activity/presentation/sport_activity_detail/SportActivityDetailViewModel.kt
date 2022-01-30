@@ -11,6 +11,7 @@ import com.example.sportresults.core.util.Screen
 import com.example.sportresults.core.util.UiEvent
 import com.example.sportresults.feature_sport_activity.data.local.SportType
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
+import com.example.sportresults.feature_sport_activity.domain.model.SportActivity
 import com.example.sportresults.feature_sport_activity.domain.use_case.SportActivityUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -25,6 +26,9 @@ class SportActivityDetailViewModel @Inject constructor(
 
     private val _state = mutableStateOf(SportActivityDetailState())
     val state: State<SportActivityDetailState> = _state
+
+    private val _distanceState = mutableStateOf<String>("")
+    val distanceState: State<String> = _distanceState
 
     private val _uiEvent = Channel<UiEvent> { }
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -87,10 +91,46 @@ class SportActivityDetailViewModel @Inject constructor(
                     showDurationDialog = !state.value.showDurationDialog
                 )
             }
+            is SportActivityDetailEvent.SetDistanceString -> {
+                _distanceState.value = event.value
+            }
+            is SportActivityDetailEvent.SetDistance -> {
+                val floatValue = distanceState.value.replace(',','.').toFloatOrNull()
+                var newSportActivity: SportActivity? = null
+
+                if (floatValue != null) {
+                    newSportActivity = state.value.sportActivity?.copy(
+                        distance = floatValue
+                    )
+                } else {
+                    newSportActivity = state.value.sportActivity?.copy(
+                        distance = state.value.sportActivity!!.distance
+                    )
+                }
+                _state.value = state.value.copy(
+                    sportActivity = newSportActivity
+                )
+
+                if(floatValue == null) {
+                    _distanceState.value = ""
+                } else
+                    _distanceState.value = floatValue.toString()
+
+                checkPropertiesBeforeSave()
+            }
             is SportActivityDetailEvent.ClickSave -> {
                 if (state.value.canSave) {
                     saveSportActivity()
                 }
+            }
+            is SportActivityDetailEvent.SetPlace -> {
+                val newSportActivity = state.value.sportActivity?.copy(
+                    place = event.name
+                )
+                _state.value = state.value.copy(
+                    sportActivity = newSportActivity
+                )
+                checkPropertiesBeforeSave()
             }
         }
     }
@@ -100,6 +140,7 @@ class SportActivityDetailViewModel @Inject constructor(
             if (sportAtivity.sportType != null
                 && (sportAtivity.hours > 0 || sportAtivity.minutes > 0 || sportAtivity.seconds > 0)
                 && sportAtivity.storageType != null
+                && sportAtivity.place.isNotBlank()
             ) {
                 _state.value = state.value.copy(
                     canSave = true
@@ -115,17 +156,43 @@ class SportActivityDetailViewModel @Inject constructor(
 
     private fun loadSportTypes() {
         viewModelScope.launch {
-            _state.value = state.value.copy(
-                sportTypes = SportType.getList()
-            )
+            val response = sportActivityUseCases.getSportTypesUseCase()
+
+            when (response) {
+                is Resource.Success -> {
+                    _state.value = state.value.copy(
+                        sportTypes = response.data ?: emptyList()
+                    )
+                }
+
+                is Resource.Error -> {
+                    _state.value = state.value.copy(
+                        sportTypes = response.data ?: emptyList()
+                    )
+                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                }
+            }
         }
     }
 
     private fun loadStorageTypes() {
         viewModelScope.launch {
-            _state.value = state.value.copy(
-                storageTypes = StorageType.getList()
-            )
+            val response = sportActivityUseCases.getStorageTypesUseCase(true)
+
+            when (response) {
+                is Resource.Success -> {
+                    _state.value = state.value.copy(
+                        storageTypes = response.data ?: emptyList()
+                    )
+                }
+
+                is Resource.Error -> {
+                    _state.value = state.value.copy(
+                        storageTypes = response.data ?: emptyList()
+                    )
+                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                }
+            }
         }
     }
 
