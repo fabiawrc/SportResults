@@ -7,6 +7,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddRoad
 import androidx.compose.material.icons.filled.Timer
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,6 +35,30 @@ fun SportActivityItem(
             Spacer(modifier = Modifier.height(SpaceSmall))
             Row(
                 modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = sportActivity.formattedTime,
+                    style = MaterialTheme.typography.caption
+                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    sportActivity.storageType?.let { storageType ->
+                        Icon(
+                            painter = painterResource(id = storageType.icon),
+                            contentDescription = null,
+                            modifier = Modifier.size(IconSizeSmall),
+                            tint = storageType.color
+                        )
+                        Text(
+                            text = storageType.name,
+                            style = MaterialTheme.typography.caption.copy(fontWeight = FontWeight.Bold),
+                            color = storageType.color
+                        )
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -48,25 +73,34 @@ fun SportActivityItem(
                         Text(text = sportType.name)
                     }
                 }
+
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Default.Timer,
+                        imageVector = Icons.Default.AddRoad,
                         contentDescription = null,
+                        modifier = Modifier.size(IconSizeSmall),
                         tint = Silver
                     )
                     Spacer(modifier = Modifier.width(SpaceSmall))
                     Text(
-                        text = sportActivity.getFormatedDuration(),
+                        text = "${sportActivity.distance.toString()} km",
                         style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colors.primary
                     )
-                    Spacer(modifier = Modifier.width(SpaceSmall))
-                    sportActivity.storageType?.let { storageType ->
+                }
+                if (sportActivity.sportType?.hasDistance == true) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            painter = painterResource(id = storageType.icon),
+                            imageVector = Icons.Default.Timer,
                             contentDescription = null,
                             modifier = Modifier.size(IconSizeSmall),
-                            tint = storageType.color
+                            tint = Silver
+                        )
+                        Spacer(modifier = Modifier.width(SpaceSmall))
+                        Text(
+                            text = sportActivity.getFormatedDuration(),
+                            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colors.primary
                         )
                     }
                 }

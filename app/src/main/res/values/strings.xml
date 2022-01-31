@@ -19,4 +19,6 @@
     <string name="place">Místo</string>
     <string name="place_select">Zadejte místo sportu</string>
     <string name="distance">Vzdálenost</string>
+    <string name="error_couldnt_reach_server">Oops! Server není dostupný. Ověřte vaše připojení k internetu.</string>
+    <string name="oops_something_went_wrong">Oops! Něco se pokazilo. Prosím zkuste to znovu.</string>
 </resources>

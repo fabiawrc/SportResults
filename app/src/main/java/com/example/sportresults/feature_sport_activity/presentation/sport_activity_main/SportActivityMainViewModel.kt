@@ -2,10 +2,13 @@ package com.example.sportresults.feature_sport_activity.presentation.sport_activ
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sportresults.core.util.Resource
 import com.example.sportresults.core.util.UiEvent
+import com.example.sportresults.core.util.UiText
+import com.example.sportresults.core.util.asString
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.use_case.SportActivityUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,13 +67,12 @@ class SportActivityMainViewModel @Inject constructor(
                     )
                 }
                 is Resource.Error -> {
-                    Timber.d(response.message)
                     _state.value = state.value.copy(
                         isLoading = false,
                         sportActivities = response.data ?: emptyList()
                     )
 
-                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                    sendUiEvent(UiEvent.ShowSnackbar(response.uiText ?: UiText.unknownError()))
                 }
             }
         }
@@ -91,7 +93,7 @@ class SportActivityMainViewModel @Inject constructor(
                     _state.value = state.value.copy(
                         storageTypes = response.data ?: emptyList()
                     )
-                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                    sendUiEvent(UiEvent.ShowSnackbar(response.uiText ?: UiText.unknownError()))
                 }
             }
         }

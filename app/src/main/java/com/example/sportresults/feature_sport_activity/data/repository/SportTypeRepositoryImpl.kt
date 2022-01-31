@@ -1,6 +1,7 @@
 package com.example.sportresults.feature_sport_activity.data.repository
 
 import com.example.sportresults.core.util.Resource
+import com.example.sportresults.core.util.UiText
 import com.example.sportresults.feature_sport_activity.data.local.SportType
 import com.example.sportresults.feature_sport_activity.domain.repository.SportTypeRepository
 
@@ -10,7 +11,7 @@ class SportTypeRepositoryImpl: SportTypeRepository {
             Resource.Success(SportType.getByType(type))
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }
@@ -18,9 +19,9 @@ class SportTypeRepositoryImpl: SportTypeRepository {
     override suspend fun getAll(): Resource<List<SportType>> {
         return try {
             Resource.Success(SportType.getList())
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }

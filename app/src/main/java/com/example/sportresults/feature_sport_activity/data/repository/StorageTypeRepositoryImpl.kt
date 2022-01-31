@@ -1,6 +1,7 @@
 package com.example.sportresults.feature_sport_activity.data.repository
 
 import com.example.sportresults.core.util.Resource
+import com.example.sportresults.core.util.UiText
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.repository.StorageTypeRepository
 
@@ -10,7 +11,7 @@ class StorageTypeRepositoryImpl() : StorageTypeRepository {
             Resource.Success(StorageType.getByType(type))
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }
@@ -25,7 +26,7 @@ class StorageTypeRepositoryImpl() : StorageTypeRepository {
             Resource.Success(data)
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }

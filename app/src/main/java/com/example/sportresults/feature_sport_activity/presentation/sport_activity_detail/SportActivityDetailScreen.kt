@@ -32,6 +32,7 @@ import com.example.sportresults.R
 import com.example.sportresults.core.presentation.components.*
 import com.example.sportresults.core.presentation.ui.theme.*
 import com.example.sportresults.core.util.UiEvent
+import com.example.sportresults.core.util.asString
 import com.example.sportresults.feature_sport_activity.data.local.SportType
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import kotlinx.coroutines.flow.collectLatest
@@ -47,6 +48,7 @@ fun SportActivityDetailScreen(
 ) {
     val state = viewModel.state.value
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = true) {
@@ -55,7 +57,7 @@ fun SportActivityDetailScreen(
                 when (event) {
                     is UiEvent.ShowSnackbar -> {
                         scope.launch {
-                            snackbarHostState.showSnackbar(message = event.message)
+                            snackbarHostState.showSnackbar(message = event.uiText.asString(context))
                         }
                     }
                     is UiEvent.Navigate -> {
@@ -214,12 +216,12 @@ fun SportActivityDetailScreen(
                             viewModel.onEvent(SportActivityDetailEvent.SetStorageType(it.value))
                         }
                     )
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(SpaceLarge)
+                    )
                 }
-                Spacer(
-                    modifier = Modifier
-                        .height(SpaceLarge)
-                        .weight(1f)
-                )
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Button(

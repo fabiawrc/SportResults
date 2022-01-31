@@ -9,6 +9,7 @@ import com.example.sportresults.R
 import com.example.sportresults.core.util.Resource
 import com.example.sportresults.core.util.Screen
 import com.example.sportresults.core.util.UiEvent
+import com.example.sportresults.core.util.UiText
 import com.example.sportresults.feature_sport_activity.data.local.SportType
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.model.SportActivity
@@ -169,7 +170,7 @@ class SportActivityDetailViewModel @Inject constructor(
                     _state.value = state.value.copy(
                         sportTypes = response.data ?: emptyList()
                     )
-                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                    sendUiEvent(UiEvent.ShowSnackbar(response.uiText ?: UiText.unknownError()))
                 }
             }
         }
@@ -190,7 +191,7 @@ class SportActivityDetailViewModel @Inject constructor(
                     _state.value = state.value.copy(
                         storageTypes = response.data ?: emptyList()
                     )
-                    sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                    sendUiEvent(UiEvent.ShowSnackbar(response.uiText ?: UiText.unknownError()))
                 }
             }
         }
@@ -206,7 +207,7 @@ class SportActivityDetailViewModel @Inject constructor(
                         sendUiEvent(UiEvent.Navigate(Screen.SportActivityMainScreen.route))
                     }
                     is Resource.Error -> {
-                        sendUiEvent(UiEvent.ShowSnackbar(response.message ?: "Neznámá chyba"))
+                        sendUiEvent(UiEvent.ShowSnackbar(response.uiText ?: UiText.unknownError()))
                     }
                 }
             }

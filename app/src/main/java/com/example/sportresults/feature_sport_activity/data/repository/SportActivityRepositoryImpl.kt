@@ -1,11 +1,15 @@
 package com.example.sportresults.feature_sport_activity.data.repository
 
+import com.example.sportresults.R
 import com.example.sportresults.core.util.Resource
+import com.example.sportresults.core.util.UiText
 import com.example.sportresults.feature_sport_activity.data.local.SportActivityDao
 import com.example.sportresults.feature_sport_activity.data.remote.SportActivityApi
 import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.model.SportActivity
 import com.example.sportresults.feature_sport_activity.domain.repository.SportActivityRepository
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class SportActivityRepositoryImpl @Inject constructor(
@@ -13,7 +17,10 @@ class SportActivityRepositoryImpl @Inject constructor(
     private val apiSport: SportActivityApi
 ) : SportActivityRepository {
 
-    override suspend fun getActivity(activityId: Long,storageType: StorageType): Resource<SportActivity> {
+    override suspend fun getActivity(
+        activityId: Long,
+        storageType: StorageType
+    ): Resource<SportActivity> {
         return try {
             var responseData: SportActivity? = null
             when (storageType) {
@@ -25,9 +32,15 @@ class SportActivityRepositoryImpl @Inject constructor(
                 }
             }
             Resource.Success(data = responseData)
+        } catch (e: IOException) {
+            Resource.Error(uiText = UiText.StringResource(R.string.error_couldnt_reach_server))
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }
@@ -38,10 +51,12 @@ class SportActivityRepositoryImpl @Inject constructor(
         return try {
             when (storageType) {
                 is StorageType.Local -> {
-                    responseData = daoSport.getAllActivities().map { it.toActivity() }.toMutableList()
+                    responseData =
+                        daoSport.getAllActivities().map { it.toActivity() }.toMutableList()
                 }
                 is StorageType.Remote -> {
-                    responseData = apiSport.getAllActivities().data?.map { it.toActivity() }?.toMutableList()
+                    responseData =
+                        apiSport.getAllActivities().data?.map { it.toActivity() }?.toMutableList()
                 }
                 is StorageType.All -> {
                     val localData = daoSport.getAllActivities().map { it.toActivity() }
@@ -51,9 +66,19 @@ class SportActivityRepositoryImpl @Inject constructor(
                 }
             }
             Resource.Success(data = responseData)
+        } catch (e: IOException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.error_couldnt_reach_server),
+                data = responseData
+            )
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong),
+                data = responseData
+            )
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage,
+                uiText = UiText.DynamicString(e.localizedMessage),
                 data = responseData
             )
         }
@@ -78,9 +103,15 @@ class SportActivityRepositoryImpl @Inject constructor(
                 }
             }
             Resource.Success(Unit)
+        } catch (e: IOException) {
+            Resource.Error(uiText = UiText.StringResource(R.string.error_couldnt_reach_server))
+        } catch (e: HttpException) {
+            Resource.Error(
+                uiText = UiText.StringResource(R.string.oops_something_went_wrong)
+            )
         } catch (e: Exception) {
             Resource.Error(
-                message = e.localizedMessage
+                uiText = UiText.DynamicString(e.localizedMessage)
             )
         }
     }

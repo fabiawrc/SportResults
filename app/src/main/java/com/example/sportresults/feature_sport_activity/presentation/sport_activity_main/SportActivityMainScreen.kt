@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,6 +20,7 @@ import com.example.sportresults.core.presentation.components.Chip
 import com.example.sportresults.core.presentation.ui.theme.*
 import com.example.sportresults.core.util.Screen
 import com.example.sportresults.core.util.UiEvent
+import com.example.sportresults.core.util.asString
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.MainAxisAlignment
 import kotlinx.coroutines.flow.collectLatest
@@ -33,6 +35,7 @@ fun SportActivityMainScreen(
 ) {
     val state = viewModel.state.value
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(key1 = true) {
@@ -41,7 +44,7 @@ fun SportActivityMainScreen(
                 when (event) {
                     is UiEvent.ShowSnackbar -> {
                         scope.launch {
-                            snackbarHostState.showSnackbar(message = event.message)
+                            snackbarHostState.showSnackbar(message = event.uiText.asString(context))
                         }
                     }
                     is UiEvent.Navigate -> {
@@ -98,9 +101,7 @@ fun SportActivityMainScreen(
                 }
             } else {
                 Text(
-                    text = stringResource(id = R.string.emptylist),
-                    color = Silver,
-                    style = MaterialTheme.typography.caption,
+                    text = "",
                     modifier = Modifier
                         .weight(1f)
                         .align(Alignment.CenterHorizontally)
@@ -125,6 +126,23 @@ fun SportActivityMainScreen(
 
             Spacer(modifier = Modifier.height(SpaceMedium))
         }
+
+        if(state.sportActivities.count() <= 0){
+            Text(
+                text = stringResource(id = R.string.emptylist),
+                color = Silver,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier
+                    .align(Alignment.Center)
+            )
+        }
+
+        if (state.isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
         SnackbarHost(
             hostState = snackbarHostState,
             modifier = Modifier
