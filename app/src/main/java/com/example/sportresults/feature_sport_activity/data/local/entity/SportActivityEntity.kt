@@ -25,17 +25,8 @@ data class SportActivityEntity(
 
         return SportActivity(
             activityId = activityId,
-            sportType = when(sportType) {
-                SportType.Running.type -> SportType.Running
-                SportType.Bike.type -> SportType.Bike
-                else -> SportType.Running
-            },
-            storageType = when(storageType) {
-                StorageType.All.type -> StorageType.All
-                StorageType.Local.type -> StorageType.Local
-                StorageType.Remote.type -> StorageType.Remote
-                else -> StorageType.All
-            },
+            sportType = SportType.getByType(sportType),
+            storageType = StorageType.getByType(storageType),
             place = place,
             hours = userDurationTime.hours,
             minutes = userDurationTime.minutes,

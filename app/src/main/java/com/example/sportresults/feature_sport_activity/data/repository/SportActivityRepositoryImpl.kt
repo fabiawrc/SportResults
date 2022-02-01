@@ -13,8 +13,8 @@ import java.io.IOException
 import javax.inject.Inject
 
 class SportActivityRepositoryImpl @Inject constructor(
-    private val daoSport: SportActivityDao,
-    private val apiSport: SportActivityApi
+    private val dao: SportActivityDao,
+    private val api: SportActivityApi
 ) : SportActivityRepository {
 
     override suspend fun getActivity(
@@ -25,10 +25,10 @@ class SportActivityRepositoryImpl @Inject constructor(
             var responseData: SportActivity? = null
             when (storageType) {
                 is StorageType.Local -> {
-                    responseData = daoSport.getActivity(activityId).toActivity()
+                    responseData = dao.getActivity(activityId).toActivity()
                 }
                 is StorageType.Remote -> {
-                    responseData = apiSport.getActivity(activityId.toString()).data?.toActivity()
+                    responseData = api.getActivity(activityId).data?.toActivity()
                 }
             }
             Resource.Success(data = responseData)
@@ -52,19 +52,20 @@ class SportActivityRepositoryImpl @Inject constructor(
             when (storageType) {
                 is StorageType.Local -> {
                     responseData =
-                        daoSport.getAllActivities().map { it.toActivity() }.toMutableList()
+                        dao.getAllActivities().map { it.toActivity() }.toMutableList()
                 }
                 is StorageType.Remote -> {
                     responseData =
-                        apiSport.getAllActivities().data?.map { it.toActivity() }?.toMutableList()
+                        api.getAllActivities().data?.map { it.toActivity() }?.toMutableList()
                 }
                 is StorageType.All -> {
-                    val localData = daoSport.getAllActivities().map { it.toActivity() }
+                    val localData = dao.getAllActivities().map { it.toActivity() }
                     responseData?.addAll(localData)
-                    val remoteData = apiSport.getAllActivities().data?.map { it.toActivity() }
+                    val remoteData = api.getAllActivities().data?.map { it.toActivity() }
                     responseData?.addAll(remoteData ?: emptyList())
                 }
             }
+            responseData?.sortByDescending { it.formattedTime }
             Resource.Success(data = responseData)
         } catch (e: IOException) {
             Resource.Error(
@@ -90,16 +91,16 @@ class SportActivityRepositoryImpl @Inject constructor(
         return try {
             when (sportActivity.storageType) {
                 is StorageType.Local -> {
-                    daoSport.insertActivity(sportActivity.toActivityEntity())
+                    dao.insertActivity(sportActivity.toActivityEntity())
                 }
                 is StorageType.Remote -> {
-                    apiSport.insertActivity(sportActivity.toActivityDto())
+                    api.insertActivity(sportActivity.toActivityDto())
                 }
                 is StorageType.All -> {
                     sportActivity.storageType = StorageType.Local
-                    daoSport.insertActivity(sportActivity.toActivityEntity())
+                    dao.insertActivity(sportActivity.toActivityEntity())
                     sportActivity.storageType = StorageType.Remote
-                    apiSport.insertActivity(sportActivity.toActivityDto())
+                    api.insertActivity(sportActivity.toActivityDto())
                 }
             }
             Resource.Success(Unit)

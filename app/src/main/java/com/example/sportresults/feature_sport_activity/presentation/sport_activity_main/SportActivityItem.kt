@@ -31,7 +31,6 @@ fun SportActivityItem(
         Column(modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }) {
-            Divider(color = Silver)
             Spacer(modifier = Modifier.height(SpaceSmall))
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -62,7 +61,7 @@ fun SportActivityItem(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row() {
+                Row(modifier = Modifier.weight(0.4f), horizontalArrangement = Arrangement.Start) {
                     sportActivity.sportType?.let { sportType ->
                         Icon(
                             painter = painterResource(id = sportType.icon),
@@ -74,36 +73,38 @@ fun SportActivityItem(
                     }
                 }
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        imageVector = Icons.Default.AddRoad,
-                        contentDescription = null,
-                        modifier = Modifier.size(IconSizeSmall),
-                        tint = Silver
-                    )
-                    Spacer(modifier = Modifier.width(SpaceSmall))
-                    Text(
-                        text = "${sportActivity.distance.toString()} km",
-                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colors.primary
-                    )
-                }
                 if (sportActivity.sportType?.hasDistance == true) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(modifier = Modifier.weight(0.3f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
                         Icon(
-                            imageVector = Icons.Default.Timer,
+                            imageVector = Icons.Default.AddRoad,
                             contentDescription = null,
                             modifier = Modifier.size(IconSizeSmall),
                             tint = Silver
                         )
                         Spacer(modifier = Modifier.width(SpaceSmall))
                         Text(
-                            text = sportActivity.getFormatedDuration(),
+                            text = "${sportActivity.distance.toString()} km",
                             style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colors.primary
                         )
                     }
                 }
+
+                Row(modifier = Modifier.weight(0.3f), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.End) {
+                    Icon(
+                        imageVector = Icons.Default.Timer,
+                        contentDescription = null,
+                        modifier = Modifier.size(IconSizeSmall),
+                        tint = Silver
+                    )
+                    Spacer(modifier = Modifier.width(SpaceSmall))
+                    Text(
+                        text = sportActivity.getFormatedDuration(),
+                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colors.primary
+                    )
+                }
+
             }
             Spacer(modifier = Modifier.height(SpaceSmall))
             Divider(color = Silver)

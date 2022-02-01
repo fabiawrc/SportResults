@@ -19,6 +19,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //PermissionManager.IsLocationPermissionGranted(this)
+
         setContent {
             SportResultsTheme {
                 Surface(
@@ -26,8 +28,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     val navController = rememberNavController()
-                    val navBackStackEntry by navController.currentBackStackEntryAsState()
-
                     Navigation(navController)
                 }
             }

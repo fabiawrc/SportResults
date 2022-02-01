@@ -11,7 +11,7 @@ interface SportActivityApi {
 
     @GET("/api/activity/get")
     suspend fun getActivity(
-        @Query("activityId") activityId: String
+        @Query("activityId") activityId: Long
     ): BasicApiResponse<SportActivityDto>
 
     @GET("/api/activity/getall")

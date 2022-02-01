@@ -1,8 +1,11 @@
 package com.example.sportresults.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.sportresults.core.data.local.AppLocalDatabase
+import com.example.sportresults.feature_sport_activity.data.local.SportActivityMemoryData
+import com.example.sportresults.feature_sport_activity.data.remote.SportActivitiApi_MockTest
 import com.example.sportresults.feature_sport_activity.data.remote.SportActivityApi
 import com.example.sportresults.feature_sport_activity.data.repository.SportActivityRepositoryImpl
 import com.example.sportresults.feature_sport_activity.data.repository.SportTypeRepositoryImpl
@@ -22,6 +25,16 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Singleton
+    @Provides
+    fun provideContext(application: Application): Context = application.applicationContext
+
+    @Provides
+    @Singleton
+    fun provideSportActivityMemoryData(): SportActivityMemoryData{
+        return SportActivityMemoryData()
+    }
+
     @Provides
     @Singleton
     fun provideAppLocalDatabase(app: Application): AppLocalDatabase {
@@ -30,17 +43,23 @@ object AppModule {
         ).build()
     }
 
+//    @Provides
+//    @Singleton
+//    fun provideSportActivityApi(
+//    ): SportActivityApi {
+//        val baseURL = "https://localhost:44349/"
+//
+//        return Retrofit.Builder()
+//            .baseUrl(baseURL)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//            .create(SportActivityApi::class.java)
+//    }
+
     @Provides
     @Singleton
-    fun provideSportActivityApi(
-    ): SportActivityApi {
-        val baseURL = "https://localhost:44349/"
-
-        return Retrofit.Builder()
-            .baseUrl(baseURL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(SportActivityApi::class.java)
+    fun provideSportActivityApi(sportActivityMemoryData: SportActivityMemoryData): SportActivityApi {
+        return SportActivitiApi_MockTest(sportActivityMemoryData)
     }
 
     @Provides

@@ -1,28 +1,31 @@
 package com.example.sportresults.feature_sport_activity.presentation.sport_activity_detail
 
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.sportresults.R
 import com.example.sportresults.core.util.Resource
 import com.example.sportresults.core.util.Screen
 import com.example.sportresults.core.util.UiEvent
 import com.example.sportresults.core.util.UiText
-import com.example.sportresults.feature_sport_activity.data.local.SportType
-import com.example.sportresults.feature_sport_activity.data.local.StorageType
 import com.example.sportresults.feature_sport_activity.domain.model.SportActivity
 import com.example.sportresults.feature_sport_activity.domain.use_case.SportActivityUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class SportActivityDetailViewModel @Inject constructor(
-    private val sportActivityUseCases: SportActivityUseCases
+    private val sportActivityUseCases: SportActivityUseCases,
+    private val context: Context
 ) : ViewModel() {
 
     private val _state = mutableStateOf(SportActivityDetailState())
@@ -37,6 +40,7 @@ class SportActivityDetailViewModel @Inject constructor(
     init {
         loadSportTypes()
         loadStorageTypes()
+        getAddressInfo(49.579449543498406, 17.260868557670374)
     }
 
     fun onEvent(event: SportActivityDetailEvent) {
@@ -212,6 +216,20 @@ class SportActivityDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun getAddressInfo(latitude:Double, longitude:Double){
+        val geocoder = Geocoder(context, Locale.getDefault())
+        val addresses: List<Address> = geocoder.getFromLocation(latitude, longitude, 1)
+
+        val address: String = addresses[0].getAddressLine(0)
+        val city: String = addresses[0].locality
+        val state: String = addresses[0].adminArea
+        val country: String = addresses[0].countryName
+        val postalCode: String = addresses[0].postalCode
+        val knownName: String = addresses[0].featureName
+
+        Timber.log(1, "${address}, ${city}")
     }
 
     private fun sendUiEvent(event: UiEvent) {

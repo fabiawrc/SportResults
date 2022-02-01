@@ -9,6 +9,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -198,14 +199,16 @@ fun SportActivityDetailScreen(
                         }
                     }
 
-                    StandardTextField(
-                        text = state.sportActivity?.place ?: "",
-                        label = stringResource(id = R.string.place),
-                        placeholder = stringResource(id = R.string.place_select),
-                        onValueChanged = {
-                            viewModel.onEvent(SportActivityDetailEvent.SetPlace(it))
-                        }
-                    )
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        StandardTextField(
+                            text = state.sportActivity?.place ?: "",
+                            label = stringResource(id = R.string.place),
+                            placeholder = stringResource(id = R.string.place_select),
+                            onValueChanged = {
+                                viewModel.onEvent(SportActivityDetailEvent.SetPlace(it))
+                            }
+                        )
+                    }
                     Spacer(modifier = Modifier.height(SpaceLarge))
 
                     StandardDropDown(
