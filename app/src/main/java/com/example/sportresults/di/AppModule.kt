@@ -4,8 +4,8 @@ import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.example.sportresults.core.data.local.AppLocalDatabase
-import com.example.sportresults.feature_sport_activity.data.local.SportActivityMemoryData
-import com.example.sportresults.feature_sport_activity.data.remote.SportActivitiApi_MockTest
+import com.example.sportresults.feature_sport_activity.data.local.SportActivityData_Fake
+import com.example.sportresults.feature_sport_activity.data.remote.SportActivitiApi_Fake
 import com.example.sportresults.feature_sport_activity.data.remote.SportActivityApi
 import com.example.sportresults.feature_sport_activity.data.repository.SportActivityRepositoryImpl
 import com.example.sportresults.feature_sport_activity.data.repository.SportTypeRepositoryImpl
@@ -18,8 +18,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -31,8 +29,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSportActivityMemoryData(): SportActivityMemoryData{
-        return SportActivityMemoryData()
+    fun provideSportActivityMemoryData(): SportActivityData_Fake{
+        return SportActivityData_Fake()
     }
 
     @Provides
@@ -58,8 +56,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideSportActivityApi(sportActivityMemoryData: SportActivityMemoryData): SportActivityApi {
-        return SportActivitiApi_MockTest(sportActivityMemoryData)
+    fun provideSportActivityApi(sportActivityDataFake: SportActivityData_Fake): SportActivityApi {
+        return SportActivitiApi_Fake(sportActivityDataFake)
     }
 
     @Provides

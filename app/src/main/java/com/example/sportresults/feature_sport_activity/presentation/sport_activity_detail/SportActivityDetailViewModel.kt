@@ -40,7 +40,6 @@ class SportActivityDetailViewModel @Inject constructor(
     init {
         loadSportTypes()
         loadStorageTypes()
-        getAddressInfo(49.579449543498406, 17.260868557670374)
     }
 
     fun onEvent(event: SportActivityDetailEvent) {
@@ -100,28 +99,7 @@ class SportActivityDetailViewModel @Inject constructor(
                 _distanceState.value = event.value
             }
             is SportActivityDetailEvent.SetDistance -> {
-                val floatValue = distanceState.value.replace(',','.').toFloatOrNull()
-                var newSportActivity: SportActivity? = null
-
-                if (floatValue != null) {
-                    newSportActivity = state.value.sportActivity?.copy(
-                        distance = floatValue
-                    )
-                } else {
-                    newSportActivity = state.value.sportActivity?.copy(
-                        distance = state.value.sportActivity!!.distance
-                    )
-                }
-                _state.value = state.value.copy(
-                    sportActivity = newSportActivity
-                )
-
-                if(floatValue == null) {
-                    _distanceState.value = ""
-                } else
-                    _distanceState.value = floatValue.toString()
-
-                checkPropertiesBeforeSave()
+                setDistance()
             }
             is SportActivityDetailEvent.ClickSave -> {
                 if (state.value.canSave) {
@@ -201,7 +179,33 @@ class SportActivityDetailViewModel @Inject constructor(
         }
     }
 
+    private fun setDistance(){
+        val floatValue = distanceState.value.replace(',','.').toFloatOrNull()
+        var newSportActivity: SportActivity? = null
+
+        if (floatValue != null) {
+            newSportActivity = state.value.sportActivity?.copy(
+                distance = floatValue
+            )
+        } else {
+            newSportActivity = state.value.sportActivity?.copy(
+                distance = state.value.sportActivity!!.distance
+            )
+        }
+        _state.value = state.value.copy(
+            sportActivity = newSportActivity
+        )
+
+        if(floatValue == null) {
+            _distanceState.value = ""
+        } else
+            _distanceState.value = floatValue.toString()
+
+        checkPropertiesBeforeSave()
+    }
+
     private fun saveSportActivity() {
+        setDistance()
         viewModelScope.launch {
             state.value.sportActivity?.let { sportActivity ->
                 val response = sportActivityUseCases.insertActivityUseCase(sportActivity)
