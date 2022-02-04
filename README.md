@@ -1,8 +1,12 @@
 # SportResults - Jetpack compose and Clean Architecture native Android application
 
 This app shows some of my current experience with the latest approaches and technologies for developing native Android apps.
+You can use the application to record sports performances.
 
-SportResults is a sample app built with
+## Screen design 
+![RKSportResults](https://user-images.githubusercontent.com/55541649/152497369-7256e887-814d-4bab-b145-dcc78ddd1dbc.png)
+
+## SportResults is a sample app built with
 * Kotlin
 * Jetpack Compose
 * Clean Architecture
@@ -14,13 +18,7 @@ SportResults is a sample app built with
 * Repository pattern
 * Lottie animations
 
-To try out this sample app, you need to use 
-[Android Studio Arctic Fox](https://developer.android.com/studio)
-You can clone this repository or import the
-project from Android Studio following the steps
-[here](https://developer.android.com/jetpack/compose/setup#sample).
-
-This sample showcases:
+## This sample showcases:
 
 * SplashScreen with simple Lottie animation
 * Simple list of activities with filtering by StorageType
@@ -35,7 +33,12 @@ This sample showcases:
 ## Saving activities to remote storage (API)
 Saving and loading sports activities to remote storage is emulated using fake classes because the backend interface is not available.
 
-### Unit tests
+## Unit tests
 In [androidTest](app/src/test/java/com/example/sportresults) you'll find unit tests
 
-
+## Install
+To try out this sample app, you need to use 
+[Android Studio Arctic Fox](https://developer.android.com/studio)
+You can clone this repository or import the
+project from Android Studio following the steps
+[here](https://developer.android.com/jetpack/compose/setup#sample).
